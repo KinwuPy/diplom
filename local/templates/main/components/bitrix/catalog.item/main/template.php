@@ -76,28 +76,18 @@ if (isset($arResult['ITEM']))
 		$actualItem = $item;
 	}
 
-	$morePhoto = null;
 	if ($arParams['PRODUCT_DISPLAY_MODE'] === 'N' && $haveOffers)
 	{
 		$price = $item['ITEM_START_PRICE'];
 		$minOffer = $item['OFFERS'][$item['ITEM_START_PRICE_SELECTED']];
 		$measureRatio = $minOffer['ITEM_MEASURE_RATIOS'][$minOffer['ITEM_MEASURE_RATIO_SELECTED']]['RATIO'];
-		if (isset($item['MORE_PHOTO']))
-		{
-			$morePhoto = $item['MORE_PHOTO'];
-		}
 	}
 	else
 	{
 		$price = $actualItem['ITEM_PRICES'][$actualItem['ITEM_PRICE_SELECTED']] ?? null;
 		$measureRatio = $price['MIN_QUANTITY'] ?? null;
-		if (isset($actualItem['MORE_PHOTO']))
-		{
-			$morePhoto = $actualItem['MORE_PHOTO'];
-		}
 	}
 
-	$showSlider = is_array($morePhoto) && count($morePhoto) > 1;
 	$showSubscribe = $arParams['PRODUCT_SUBSCRIPTION'] === 'Y' && ($item['CATALOG_SUBSCRIBE'] === 'Y' || $haveOffers);
 
 	$discountPositionClass = isset($arResult['BIG_DISCOUNT_PERCENT']) && $arResult['BIG_DISCOUNT_PERCENT'] === 'Y'
@@ -114,16 +104,10 @@ if (isset($arResult['ITEM']))
 	$itemHasDetailUrl = isset($item['DETAIL_PAGE_URL']) && $item['DETAIL_PAGE_URL'] != '';
 	?>
 
-	<div class="product-item-container<?=(isset($arResult['SCALABLE']) && $arResult['SCALABLE'] === 'Y' ? ' product-item-scalable-card' : '')?>"
-		id="<?=$areaId?>" data-entity="item">
+	<div id="<?=$areaId?>" data-entity="item">
 		<?php
-		$documentRoot = Main\Application::getDocumentRoot();
-		$templatePath = mb_strtolower($arResult['TYPE']).'/template.php';
-		$file = new Main\IO\File($documentRoot.$templateFolder.'/'.$templatePath);
-		if ($file->isExists())
-		{
-			include($file->getPath());
-		}
+
+        include 'card/template.php';
 
 		if (!$haveOffers)
 		{
